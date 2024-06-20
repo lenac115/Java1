@@ -10,7 +10,7 @@ public class PremiumShoppingMall extends ShoppingMall {
 
         int idx;
         try {
-            idx = searchProduct(name);
+            idx = searchIdxProduct(name);
         } catch (ProductArrayBoundException e) {
             System.out.println(e.getMessage());
             return;
@@ -25,7 +25,7 @@ public class PremiumShoppingMall extends ShoppingMall {
             System.out.println(searched[idx].getName() + " 구매 완료, 가격 : " + searched[idx].calculatePrice());
             System.out.println(searched[idx].getName() + " 남은 재고 : " + searched[idx].getStock());
         } else {
-            System.out.println("재고가 부족합니다.");
+            System.out.println("구매할 재고가 부족합니다.");
         }
     }
 

@@ -24,7 +24,8 @@ public abstract class ShoppingMall {
                 newProducts[i] = products[i];
             }
             products = newProducts;
-            products[lastIdx] = p;
+            products[lastIdx + 1] = p;
+            lastIdx++;
         } else {
             products[lastIdx + 1] = p;
             lastIdx++;
@@ -49,20 +50,43 @@ public abstract class ShoppingMall {
         addSome(electronics);
     }
 
-    public void removeProduct() throws ProductArrayBoundException {
+    public void addStock(String name, int stock) {
+        int idx;
+        try {
+            idx = searchIdxProduct(name);
+            products[idx].setStock(products[idx].getStock() + stock);
+            System.out.println(products[idx].getName()+ "의 " + "재고가 " + stock + "만큼 늘어났습니다.");
+        } catch (ProductArrayBoundException e) {
+            System.out.println("존재하지 않는 상품입니다.");
+        }
+    }
+
+    public void removeProduct(String name) throws ProductArrayBoundException {
         if (lastIdx >= 0) {
-            products[lastIdx] = null;
+            for (int i = 0; i < lastIdx; i++) {
+                if (products[i].getName().equals(name)) {
+                    System.out.println(products[i].getName() + "의 재고 1 감소");
+                    if (products[i].getStock() == 0) {
+                        throw new ProductArrayBoundException("삭제할 재고가 부족합니다.");
+                    }
+                    products[i].setStock(products[i].getStock() - 1);
+                }
+            }
             lastIdx--;
         } else {
             throw new ProductArrayBoundException("상품 목록 초과");
         }
     }
 
-    public void removeProduct(String name) throws ProductArrayBoundException {
+    public void removeProduct(Product product) throws ProductArrayBoundException {
         if (lastIdx >= 0) {
-            for (int i = 0; i < products.length; i++) {
-                if (products[i].getName().equals(name)) {
-                    products[i] = null;
+            for (int i = 0; i < lastIdx; i++) {
+                if (products[i].equals(product)) {
+                    System.out.println(products[i].getName() + "의 재고 1 감소");
+                    if (products[i].getStock() == 0) {
+                        throw new ProductArrayBoundException("삭제할 재고가 부족합니다.");
+                    }
+                    products[i].setStock(products[i].getStock() - 1);
                 }
             }
             lastIdx--;
@@ -88,7 +112,17 @@ public abstract class ShoppingMall {
         System.out.println();
     }
 
-    protected int searchProduct(String name) throws ProductArrayBoundException {
+    public Product searchProduct(String name) throws ProductArrayBoundException {
+        for (int i = 0; i < lastIdx; i++) {
+            if (products[i].getName().equals(name)) {
+                return products[i];
+            }
+        }
+
+        throw new ProductArrayBoundException("존재하지 않는 상품입니다.");
+    }
+
+    protected int searchIdxProduct(String name) throws ProductArrayBoundException {
         for (int i = 0; i < lastIdx; i++) {
             if (products[i].getName().equals(name)) {
                 return i;
@@ -110,7 +144,7 @@ public abstract class ShoppingMall {
 
         System.out.println("상품명 검색");
         try {
-            int i = searchProduct(name);
+            int i = searchIdxProduct(name);
             System.out.println(products[i]);
         } catch (ProductArrayBoundException e) {
             System.out.println(e.getMessage());
