@@ -1,5 +1,8 @@
 package org.example.weeklytest;
 
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         ShoppingMall shoppingMall = new PremiumShoppingMall(5);
